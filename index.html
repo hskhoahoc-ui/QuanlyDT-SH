@@ -11,6 +11,7 @@
       height: 100%; 
       width: 100%; 
       overflow: hidden; 
+      background-color: #0d47a1;
     }
     iframe { 
       width: 100%; 
@@ -21,6 +22,50 @@
   </style>
 </head>
 <body>
-  <iframe src="https://script.google.com/macros/s/AKfycbyeOeevd4DrlHgt1aHsvqDKul33pMBDzsmkY1lE2Lw2O1_q5ZkxzU4BYY5DiLDAjIO9/exec" allow="geolocation; microphone; camera"></iframe>
+  <iframe id="appFrame" allow="geolocation; microphone; camera; fullscreen"></iframe>
+
+  <script>
+    // Danh sách toàn bộ 23 ứng dụng con tương ứng với đường dẫn ngắn
+    const routes = {
+      "/":             "https://script.google.com/macros/s/AKfycbyeOeevd4DrlHgt1aHsvqDKul33pMBDzsmkY1lE2Lw2O1_q5ZkxzU4BYY5DiLDAjIO9/exec",
+      "/tuyensinh":    "https://script.google.com/macros/s/AKfycbxfKnR4hRGdkYkYK6ItK5E2HizPBz7cN5XxS52UqPJ1T_8cieTc3OK6miz48IWZRxFPkw/exec",
+      "/lichhoc":      "https://script.google.com/macros/s/AKfycbyVE5wzemrfsPO3tB2ziJvVd6qWixLz0MNR-j-2NHjVHSNczK5h5w0_H7QCSz7zd7JE/exec",
+      "/hocphi":       "https://script.google.com/macros/s/AKfycbygenZdEoK5nAJH33hWfS6lfNBFDmxfhkTjlLXAh4hfTqwLfZwQsCT0bIEs7b9WZt0gfw/exec",
+      "/600cau":       "https://script.google.com/macros/s/AKfycbxQ99iuKKi4gOlYNgdIdo5TFgb3fkHZaWdlLV-Y8cEH9oHhXkM6QLtm9G7KA1I886Zx/exec",
+      "/luatgtdb":     "https://script.google.com/macros/s/AKfycbzpF6NiyqewSDzcuzukpVRpHlJeuV5FamztpIUSWAIskeLfn9zOqUM93p7ovO-MIjsV8A/exec",
+      "/mophong-dt":   "https://script.google.com/macros/s/AKfycbxegnNxfzorlsTZxQh93OGG0q68jkP-HzCH3qJS3QfB2S6cv2vXvGWInnb4dHW9ysnH/exec",
+      "/tinhhuong":    "https://script.google.com/macros/s/AKfycbymaEmeaU9zhJXaFY2RE-VhOS0-OHsOXyQCo5jAXYI6XA8WFueHyOjOOflrLGts-JwP/exec",
+      "/thuexe":       "https://script.google.com/macros/s/AKfycbygs9gGmsMQCLGlAxm7qdTqedMTXNWp_ATv2tmDP9k-2To8oZM45rdf-KGPxa9eDyD8xQ/exec",
+      "/sbd":          "https://script.google.com/macros/s/AKfycbyIC6ItuZVEzBhy4kj3HFzYbRlztptlYgkqNQ_w09imyCruiQxkEfeKDmZGAVsjJ_eW/exec",
+      "/kiemtra-hv":   "https://script.google.com/macros/s/AKfycbyh6kBsoAZkN_z3Q0Ja8ZE0jKGhmG1JYY16F3CHD45cTGorg3GA-zxvOP9QwzbiuMDStA/exec",
+      "/ketqua":       "https://script.google.com/macros/s/AKfycbxNMMKD9oLq0yGjAdn0CTFbxz4TMwL3Y1NkCyvBtw4ELd2Go8NDZnUnOBs-jGhPrJh0eQ/exec",
+      "/chamcong":     "https://script.google.com/macros/s/AKfycbx0ev-oWiOQ24DQsGyjW6ft5DL7ppZeujMpcf1Z3vvU2Lj4rQXQeseaO5zlzxWpcDmR/exec",
+      "/quanlyxe":     "https://script.google.com/macros/s/AKfycbxLGnAzA0nHRCm5YeRc1Oi9ZUN7N0l1-F-_X4HARZrFsREtbE1ULJWm4c3mg-44SqTgqg/exec",
+      "/luong":        "https://script.google.com/macros/s/AKfycbwb4aDUVHfYG9OtKmw6ggTW-czjaOE1pmKA3H82aspFR8PTxL5Q_U8x03AIYejLFNpu/exec",
+      "/nl-moto":      "https://script.google.com/macros/s/AKfycbx-LzOrsJfs8uWT7IRqksNcRBm5Z4HuqWV93Dx3HeJ_R_8I0eeHGw2BU0XpEr06ceWx/exec",
+      "/nl-oto":       "https://script.google.com/macros/s/AKfycbxEL8aU_E7DNo2JsH6PEk91Lr_7CrtOhBo4yM9jYg5ZuULChT8TCHHH0S4xmD1TRf2N/exec",
+      "/nl-sathach":   "https://script.google.com/macros/s/AKfycbxLjfwTOKc_t1QZbaOFrAtEnotJ5zNmebdU89GBA7UADrsbMVzUjKXvKyZWg2hfjmvN8g/exec",
+      "/nl-vanphong":  "https://google.com",
+      "/baocao-khoa":  "https://script.google.com/macros/s/AKfycbzl70sC2btNiUC9ATbkgiobfy4hMps9NFSzLv1ROGjvvnl9kwrEbQy1UnQ-6uEIyfnQ/exec",
+      "/ketthuckhoa":  "https://script.google.com/macros/s/AKfycbw7YThEcmoJU_PKLHZoI-TS0Su2WA2wKu7ymBZh3NZ-vXXHg_606TYhXFOJgECUN_5s/exec",
+      "/kehoach":      "https://script.google.com/macros/s/AKfycbwCPE6xD8HFbX-VeuilZJUobffgE_foLFKuavHIS8yu_yQOxGezRVOyK_jRBiUCd4sm/exec",
+      "/nhansu":       "https://script.google.com/macros/s/AKfycbxmPxtQvVRx0n7CD_qhZQqu6Ye9dzRNEwVA5Ekt4tgbcvESXHqBrlFznt0A5IgqiJYm/exec"
+    };
+
+    // Lấy đường dẫn hiện tại trên thanh địa chỉ (bỏ dấu / ở cuối nếu có)
+    let path = window.location.pathname.toLowerCase();
+    if (path.length > 1 && path.endsWith("/")) {
+      path = path.slice(0, -1);
+    }
+
+    // Riêng link Google Drive phần mềm máy tính thì chuyển hướng thẳng (vì Drive chặn nhúng iframe)
+    if (path === "/mophong-mt") {
+      window.location.replace("https://google.com");
+    } else {
+      // Nhúng đúng ứng dụng con vào khung hình, nếu gõ sai link thì tự về trang chủ
+      const targetUrl = routes[path] || routes["/"];
+      document.getElementById("appFrame").src = targetUrl;
+    }
+  </script>
 </body>
 </html>
