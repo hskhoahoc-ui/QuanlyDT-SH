@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QUẢN LÝ ĐÀO TẠO - SÁT HẠCH</title>
-  <style>
+   <style>
     body, html { 
       margin: 0; 
       padding: 0; 
@@ -15,11 +15,14 @@
     }
     iframe { 
       width: 100%; 
-      height: 100%; 
+      /* Kéo khung iframe cao hơn màn hình 44px và đẩy lùi lên trên 44px để giấu thanh thông báo */
+      height: calc(100vh + 44px); 
+      margin-top: -44px; 
       border: none; 
       display: block; 
     }
   </style>
+
 </head>
 <body>
   <iframe id="appFrame" allow="geolocation; microphone; camera; fullscreen"></iframe>
